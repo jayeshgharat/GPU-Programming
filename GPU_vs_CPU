@@ -1,0 +1,54 @@
+from numba import jit, cuda 
+import numpy as np 
+# to measure exec time 
+from timeit import default_timer as timer 
+    
+# function optimized to run on cpu     
+def cputest(n):
+
+    # Printing magic square 
+    print ("n =", n)
+    sum = 0
+      
+    for i in range(0, n): 
+           sum = sum + (n*i)
+    print (sum)
+    
+# function optimized to run on gpu  
+@jit()                            
+def gputest(n):
+
+    # Printing magic square 
+    print ("n =", n)
+    sum = 0
+    
+    for i in range(0, n):
+           sum = sum + (n*i)
+    print (sum)
+        
+if __name__=="__main__": 
+	n = 700000
+    
+start = timer() 
+gputest(n)
+print("with gpu:", timer()-start)
+
+start = timer()
+cputest(n)
+print("with cpu:", timer()-start)
+
+#output test 1: 700000
+#n = 700000
+#171499755000000000
+#with gpu: 0.11894410000013522
+#n = 700000
+#171499755000000000
+#with cpu: 0.11041770000019824
+
+#Output test 2: 700000 *10 
+#n = 7000000
+#5479278836614035456
+#with gpu: 0.12170569999943837  (SUM value is different)
+#n = 7000000
+#171499975500000000000
+#with cpu: 1.4636264999999185  (SUM value is different)
